@@ -22,7 +22,7 @@ parser.add_argument('--offset', type=float,
 	help='(optional) move the entire timeline forward/backward from input to output. In seconds')
 args = parser.parse_args()
 
-FILE_IN		 = args.input 
+FILE_IN		 = args.input
 FILE_OUT 	 = args.output
 XML_TEMPLATE = args.template
 
@@ -99,9 +99,11 @@ def process_input_fcpxml():
 	n_project = n_event[0]
 	n_sequence = n_project[0]
 	n_spine = n_sequence[0]
+	n_gap = n_spine[0]
+
 
 	data = []
-	for node in n_spine:
+	for node in n_gap:
 		if node.tag == 'title':
 
 			n_text = node.find('text')[0].text
@@ -123,7 +125,7 @@ def process_output_srt(data):
 		t_start, t_end, text = line
 		f.write (f'{counter}\n')
 		f.write (convert_t_srt(t_start) + ' --> ' + convert_t_srt(t_end) + '\n')
-		f.write (convert_text(text) + '\n')
+		f.write (convert_text(text.strip('\n\t ')) + '\n')
 		f.write ('\n')
 		counter += 1
 
@@ -199,7 +201,7 @@ def process_output_fcpxml(data):
 	f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
 	f.write('<!DOCTYPE fcpxml>\n')
 	f.write('\n')
-	f.write(ET.tostring(root, encoding='UTF-8', xml_declaration=False).decode('utf-8'))
+	f.write(ET.tostring(root, encoding='UTF-8').decode('utf-8'))
 	f.close()
 
 
