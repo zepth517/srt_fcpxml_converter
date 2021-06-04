@@ -14,7 +14,7 @@ parser.add_argument('-i', '--input', required=True, help="name for the input fil
 parser.add_argument('-o', '--output', required=True, help="name for the ouput file (.srt or .fcpxml)")
 parser.add_argument('-c', '--convert', 
 	help="(optional) to use OpenCC to convert between Simplified/Traditional Chinese. Please specify the OpenCC configurations (e.g., s2t, t2s)")
-parser.add_argument('-t', '--template', default='Template.xml',
+parser.add_argument('-t', '--template', default='Template_CN.xml',
 	help="(optional) to use a user-specific template file to generate .fcpxml. Default to 'Template.xml'")
 parser.add_argument('-fr', '--framerate', default=29.97, type=float,
 	help='(optional) framerate should be set in the template. This argument provides a sanity check. Default to 29.97fps')
@@ -156,22 +156,23 @@ def process_output_fcpxml(data):
 
 	n_sequence = n_project[0]
 	n_spine = n_sequence[0]
+	n_gap = n_spine[0]
 
-	title_proto = n_spine.find('title') ## find the first title as template
-	n_spine.append(ET.Element('divider')) ## add a divider between template and content
+	title_proto = n_gap.find('title') ## find the first title as template
+	n_gap.append(ET.Element('divider')) ## add a divider between template and content
 
 	counter = 1	
 	for line in data:
 		t_start, t_end, text = line
 
 		# insert gap if not starting from 0s
-		if counter == 1 and t_start > 0:
-			gap_new = ET.Element('gap')
-			gap_new.set('name', 'Gap')
-			gap_new.set('offset', '0s')
-			gap_new.set('duration', convert_t_xml(t_start))
-			gap_new.set('start', '0s')
-			n_spine.append(gap_new)
+		# if counter == 1 and t_start > 0:
+		# 	gap_new = ET.Element('gap')
+		# 	gap_new.set('name', 'Gap')
+		# 	gap_new.set('offset', '0s')
+		# 	gap_new.set('duration', convert_t_xml(t_start))
+		# 	gap_new.set('start', '0s')
+		# 	n_spine.append(gap_new)
 
 		title_new = copy.deepcopy(title_proto)
 
@@ -189,13 +190,13 @@ def process_output_fcpxml(data):
 		title_new.find('text')[0].set('ref', 'ts%d' % (counter))
 		title_new.find('text-style-def').set('id', 'ts%d' % (counter))
 
-		n_spine.append(title_new)
+		n_gap.append(title_new)
 
 		counter += 1
 	
-	while n_spine[0].tag != 'divider':
-		n_spine.remove(n_spine[0])
-	n_spine.remove(n_spine[0]) # remove divider
+	while n_gap[0].tag != 'divider':
+		n_gap.remove(n_gap[0])
+	n_gap.remove(n_gap[0]) # remove divider
 
 	f = open(FILE_OUT, 'w')
 	f.write('<?xml version="1.0" encoding="UTF-8"?>\n')

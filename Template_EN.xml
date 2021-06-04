@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fcpxml>
+
+<fcpxml version="1.9">
+    <resources>
+        <format id="r1" name="FFVideoFormat1080p2997" frameDuration="1001/30000s" width="1920" height="1080" colorSpace="1-1-1 (Rec. 709)"/>
+        <effect id="r2" name="基本字幕" uid=".../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti"/>
+    </resources>
+    <library>
+        <event name="{EVENT_NAME}">
+            <project name="{PROJECT_NAME}">
+                <sequence format="r1" tcStart="0s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
+                    <spine>
+                        <gap name="空隙">
+                            <title name="{TITLE_NO}" lane="1" offset="{OFFSET}" ref="r2" duration="{DURATION}" start="{START}">
+                                <param name="位置" key="9999/999166631/999166633/1/100/101" value="0 -476"/>
+                                <param name="展平" key="9999/999166631/999166633/2/351" value="1"/>
+                                <param name="对齐" key="9999/999166631/999166633/2/354/999169573/401" value="1 (居中)"/>
+                                <param name="融合模式" key="9999/999166631/999166633/5/999166635/21/25/5" value="1 (重复)"/>
+                                <param name="大小" key="9999/999166631/999166633/5/999166635/3" value="65"/>
+                                <param name="颜色" key="9999/999166631/999166633/5/999166635/30/32" value="0 0 0"/>
+                                <param name="融合模式" key="9999/999166631/999166633/5/999166635/30/34/5" value="1 (重复)"/>
+                                <text>
+                                    <text-style ref="ts1">{TEXT}</text-style>
+                                </text>
+                                <text-style-def id="ts1">
+                                    <text-style font="Helvetica" fontSize="65" fontFace="Regular" fontColor="1 0.999974 0.999991 1" strokeColor="0 0 0 1" strokeWidth="1" shadowColor="0 0 0 0.75" shadowOffset="5 315" alignment="center"/>
+                                </text-style-def>
+                            </title>
+                        </gap>
+                    </spine>
+                </sequence>
+            </project>
+        </event>
+        <smart-collection name="项目" match="all">
+            <match-clip rule="is" type="project"/>
+        </smart-collection>
+        <smart-collection name="所有视频" match="any">
+            <match-media rule="is" type="videoOnly"/>
+            <match-media rule="is" type="videoWithAudio"/>
+        </smart-collection>
+        <smart-collection name="仅音频" match="all">
+            <match-media rule="is" type="audioOnly"/>
+        </smart-collection>
+        <smart-collection name="静止图像" match="all">
+            <match-media rule="is" type="stills"/>
+        </smart-collection>
+        <smart-collection name="个人收藏" match="all">
+            <match-ratings value="favorites"/>
+        </smart-collection>
+    </library>
+</fcpxml>
