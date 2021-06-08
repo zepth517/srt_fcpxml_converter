@@ -161,25 +161,24 @@ def process_output_fcpxml(data):
 	title_proto = n_gap.find('title') ## find the first title as template
 	n_gap.append(ET.Element('divider')) ## add a divider between template and content
 
-	counter = 1	
+	counter = 1
+	gap_duration = 0
+	
 	for line in data:
 		t_start, t_end, text = line
 
-		# insert gap if not starting from 0s
-		# if counter == 1 and t_start > 0:
-		# 	gap_new = ET.Element('gap')
-		# 	gap_new.set('name', 'Gap')
-		# 	gap_new.set('offset', '0s')
-		# 	gap_new.set('duration', convert_t_xml(t_start))
-		# 	gap_new.set('start', '0s')
-		# 	n_spine.append(gap_new)
-
-		title_new = copy.deepcopy(title_proto)
-
 		offset   = convert_t_xml(t_start)
-		duration = convert_t_xml(t_end - t_start)
+
+		time_diff = t_end - t_start
+		gap_duration += time_diff
+
+		duration = convert_t_xml(time_diff)
 		output_text = convert_text(text) # apply conversion
 
+		if counter == 1:
+			n_gap.set('start', offset)
+
+		title_new = copy.deepcopy(title_proto)
 
 		title_new.set('name', '{%d} %s' % (counter, output_text))
 		title_new.set('offset', offset)
@@ -193,6 +192,9 @@ def process_output_fcpxml(data):
 		n_gap.append(title_new)
 
 		counter += 1
+	
+	n_gap.set('duration', convert_t_xml(gap_duration))
+
 	
 	while n_gap[0].tag != 'divider':
 		n_gap.remove(n_gap[0])

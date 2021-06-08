@@ -11,7 +11,7 @@
             <project name="{PROJECT_NAME}">
                 <sequence format="r1" tcStart="0s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
                     <spine>
-                        <gap name="空隙">
+                        <gap name="空隙" offset="0s" duration="{DURATION}" start="{START}">
                             <title name="{TITLE_NO}" lane="1" offset="{OFFSET}" ref="r2" duration="{DURATION}" start="{START}">
                                 <param name="位置" key="9999/999166631/999166633/1/100/101" value="0 -476"/>
                                 <param name="展平" key="9999/999166631/999166633/2/351" value="1"/>
@@ -28,21 +28,5 @@
                 </sequence>
             </project>
         </event>
-        <smart-collection name="项目" match="all">
-            <match-clip rule="is" type="project"/>
-        </smart-collection>
-        <smart-collection name="所有视频" match="any">
-            <match-media rule="is" type="videoOnly"/>
-            <match-media rule="is" type="videoWithAudio"/>
-        </smart-collection>
-        <smart-collection name="仅音频" match="all">
-            <match-media rule="is" type="audioOnly"/>
-        </smart-collection>
-        <smart-collection name="静止图像" match="all">
-            <match-media rule="is" type="stills"/>
-        </smart-collection>
-        <smart-collection name="个人收藏" match="all">
-            <match-ratings value="favorites"/>
-        </smart-collection>
     </library>
 </fcpxml>
