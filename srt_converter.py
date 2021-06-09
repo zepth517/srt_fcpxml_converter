@@ -162,23 +162,18 @@ def process_output_fcpxml(data):
 	n_gap.append(ET.Element('divider')) ## add a divider between template and content
 
 	counter = 1
-	gap_duration = 0
-	
+
 	for line in data:
 		t_start, t_end, text = line
 
-		offset   = convert_t_xml(t_start)
+		title_new = copy.deepcopy(title_proto)
 
-		time_diff = t_end - t_start
-		gap_duration += time_diff
-
-		duration = convert_t_xml(time_diff)
+		offset = convert_t_xml(t_start)
+		duration = convert_t_xml(t_end - t_start)
 		output_text = convert_text(text) # apply conversion
 
 		if counter == 1:
 			n_gap.set('start', offset)
-
-		title_new = copy.deepcopy(title_proto)
 
 		title_new.set('name', '{%d} %s' % (counter, output_text))
 		title_new.set('offset', offset)
@@ -192,8 +187,8 @@ def process_output_fcpxml(data):
 		n_gap.append(title_new)
 
 		counter += 1
-	
-	n_gap.set('duration', convert_t_xml(gap_duration))
+
+	n_gap.set('duration', convert_t_xml(int(data[-1][1]) - args.offset))
 
 	
 	while n_gap[0].tag != 'divider':
