@@ -121,13 +121,21 @@ def process_output_srt(data):
 	f = open(FILE_OUT, 'w')
 
 	counter = 1
+	length = len(data) + 1
+	
 	for line in data:
 		t_start, t_end, text = line
 		f.write (f'{counter}\n')
 		f.write (convert_t_srt(t_start) + ' --> ' + convert_t_srt(t_end) + '\n')
 		f.write (convert_text(text.strip('\n\t ')) + '\n')
-		f.write ('\n')
+		
 		counter += 1
+
+		if counter == length:
+			pass
+		else:
+			f.write ('\n')
+
 
 	f.close()
 
