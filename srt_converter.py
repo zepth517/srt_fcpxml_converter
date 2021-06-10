@@ -136,7 +136,6 @@ def process_output_srt(data):
 		else:
 			f.write ('\n')
 
-
 	f.close()
 
 
@@ -158,7 +157,7 @@ def process_output_fcpxml(data):
 
 	n_library = root[1]
 	n_event = n_library[0]
-	n_event.set('name', 'CC_XML')
+	n_event.set('name', 'XML转换')
 	n_project = n_event[0]
 	n_project.set('name', event_name)
 
@@ -171,6 +170,10 @@ def process_output_fcpxml(data):
 
 	counter = 1
 
+	#print(data)
+	n_gap.set('start', convert_t_xml(int(data[0][0]) ))
+	n_gap.set('duration', convert_t_xml(int(data[-1][1]) ))
+
 	for line in data:
 		t_start, t_end, text = line
 
@@ -180,8 +183,11 @@ def process_output_fcpxml(data):
 		duration = convert_t_xml(t_end - t_start)
 		output_text = convert_text(text) # apply conversion
 
-		if counter == 1:
-			n_gap.set('start', offset)
+		# if counter == 1:
+		# 	pass
+		# 	n_gap.set('start', offset)
+		# 	n_gap.set('start', convert_t_xml(int(t_start))) # good one
+		# 	n_gap.set('start', convert_t_xml(int(t_start) - args.offset))
 
 		title_new.set('name', '{%d} %s' % (counter, output_text))
 		title_new.set('offset', offset)
@@ -195,8 +201,6 @@ def process_output_fcpxml(data):
 		n_gap.append(title_new)
 
 		counter += 1
-
-	n_gap.set('duration', convert_t_xml(int(data[-1][1]) - args.offset))
 
 	
 	while n_gap[0].tag != 'divider':
