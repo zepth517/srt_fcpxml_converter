@@ -106,14 +106,17 @@ def process_input_fcpxml():
 	for node in n_gap:
 		if node.tag == 'title':
 
-			n_text = node.find('text')[0].text
-			if n_text == 'Title':
-				continue # remove bad frames
+			try:
+				n_text = node.find('text')[0].text
+				if n_text == 'Title':
+					continue # remove bad frames
 
-			offset = convert_xml_t(node.get('offset')) 
-			duration = convert_xml_t(node.get('duration'))
-			end = offset + duration
-			data.append((offset, end, n_text))
+				offset = convert_xml_t(node.get('offset')) 
+				duration = convert_xml_t(node.get('duration'))
+				end = offset + duration
+				data.append((offset, end, n_text))
+			except:
+				continue
 
 	return data
 
