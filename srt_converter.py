@@ -81,25 +81,32 @@ def process_input_srt():
 	data = []
 
 	while i < total_rows:
+		final_sub = ''
 		i += 1
 		m = re.match('(\d+):(\d+):(\d+),(\d+) --> (\d+):(\d+):(\d+),(\d+)', lines[i])
 		t_start  = convert_srt_t(m.groups()[0:4])
 		t_end    = convert_srt_t(m.groups()[4:8])
 		
+		# first line of sub
 		i += 1
-		sub1 = lines[i]
+		final_sub += lines[i]
+
+		# second line of sub
 		i += 1
+		if i < total_rows and len(lines[i]) != 0:
+			final_sub += '\r\n' + lines[i]
 
-		if i < total_rows:
-			sub2 = lines[i]
-		
-		if len(sub2) != 0:
-			final_sub = sub1 + '\r\n' + sub2
+			# third line of sub
+			i += 1
+			if i < total_rows and len(lines[i]) != 0:
+				final_sub += '\r\n' + lines[i]
+			else:
+				i -= 1
 
-			data.append((t_start, t_end, final_sub))
 		else:
 			i -= 1
-			data.append((t_start, t_end, sub1))
+		
+		data.append((t_start, t_end, final_sub))
 
 		i += 2
 
